@@ -1,4 +1,4 @@
-import { BuilderAccordion } from "./components/builder/BuilderAccordion";
+import BuilderAccordion from "./components/builder/BuilderAccordion";
 
 function App() {
 	return (

@@ -1,5 +1,5 @@
 import type { Step } from "../../types";
-import { Chevron } from "../ui/Chevron";
+import Chevron from "../ui/Chevron";
 
 interface StepHeaderProps {
 	step: Step;
@@ -7,7 +7,7 @@ interface StepHeaderProps {
 	open: boolean;
 }
 
-export const StepHeader = ({ step, count, open }: StepHeaderProps) => {
+const StepHeader = ({ step, count, open }: StepHeaderProps) => {
 	return (
 		<div className="w-full">
 			<div className="px-8 pt-6 pb-3">
@@ -34,3 +34,5 @@ export const StepHeader = ({ step, count, open }: StepHeaderProps) => {
 		</div>
 	);
 };
+
+export default StepHeader;

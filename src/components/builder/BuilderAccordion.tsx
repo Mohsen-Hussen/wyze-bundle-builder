@@ -4,13 +4,13 @@ import type { StepId } from "../../types";
 import { useProducts } from "../../hooks/useProducts";
 import { useCartTotals } from "../../hooks/useCartTotals";
 import { cn } from "../../utils/cn";
-import { StepHeader } from "./StepHeader";
+import StepHeader from "./StepHeader";
 
 interface BuilderAccordionProps {
 	renderStep?: (stepId: StepId) => ReactNode;
 }
 
-export const BuilderAccordion = ({ renderStep }: BuilderAccordionProps) => {
+const BuilderAccordion = ({ renderStep }: BuilderAccordionProps) => {
 	const { data } = useProducts();
 	const { countsByStep } = useCartTotals();
 	const [openStep, setOpenStep] = useState<string>("cameras");
@@ -49,3 +49,5 @@ export const BuilderAccordion = ({ renderStep }: BuilderAccordionProps) => {
 		</Accordion.Root>
 	);
 };
+
+export default BuilderAccordion;
