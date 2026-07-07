@@ -1,6 +1,7 @@
 import BuilderAccordion from "./components/builder/BuilderAccordion";
 import CameraStep from "./components/builder/CameraStep";
 import ReviewPanel from "./components/review/ReviewPanel";
+import CheckoutBlock from "./components/review/CheckoutBlock";
 
 function App() {
 	return (
@@ -11,8 +12,9 @@ function App() {
 						stepId === "cameras" ? <CameraStep /> : undefined
 					}
 				/>
-				<div className="mt-8">
+				<div className="mt-8 space-y-8">
 					<ReviewPanel />
+					<CheckoutBlock />
 				</div>
 			</main>
 		</div>
