@@ -91,7 +91,7 @@
       "id": "cam-unlimited",
       "name": "Cam Unlimited",
       "category": "plan",
-      "image": "/images/products/cam-unlimited.png",
+      "image": "/images/products/cam-unlimited.svg",
       "pricing": { "price": 9.99, "compareAt": 12.99, "suffix": "/mo" }
     }
   ],
