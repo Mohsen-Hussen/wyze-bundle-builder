@@ -1,3 +1,97 @@
+/* Gilroy — licensed font. Drop the .woff2 files into public/fonts/.
+   Until then the browser falls back to Poppins / system-ui (see --font-sans). */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/Gilroy-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS variables mirroring src/theme/tokens.ts (single source of truth). */
+@layer base {
+  :root {
+    /* Colors */
+    --color-purple: #4e2fd2;
+    --color-purple-70: rgba(78, 47, 210, 0.7);
+    --color-panel-blue: #edf4ff;
+    --color-blue-tint: #e7effd;
+    --color-green: #0aa288;
+    --color-mint-tint: rgba(29, 240, 187, 0.04);
+    --color-sale-red: #d8392b;
+    --color-link-blue: #0000ee;
+    --color-accent-blue: #0046c7;
+    --color-ink: #1f1f1f;
+    --color-ink-black: #0b0d10;
+    --color-muted: #6f7882;
+    --color-slate: #525963;
+    --color-grey: #484848;
+    --color-grey-2: #575757;
+    --color-muted-grey: #a8b2bd;
+    --color-border-grey: #ced6de;
+    --color-divider-light: #e6ebf0;
+    --color-fill-grey: #f0f0f0;
+    --color-fill-grey-2: #f1f1f2;
+    --color-input-fill: #f0f4f7;
+    --color-disabled: #cccccc;
+    --color-white: #ffffff;
+    --color-black: #000000;
+
+    /* Font families */
+    --font-sans: 'Gilroy', 'Poppins', system-ui, sans-serif;
+
+    /* Font-size scale (px) */
+    --text-8: 8px;
+    --text-10: 10px;
+    --text-12: 12px;
+    --text-14: 14px;
+    --text-16: 16px;
+    --text-18: 18px;
+    --text-20: 20px;
+    --text-22: 22px;
+    --text-24: 24px;
+    --text-26: 26px;
+    --text-28: 28px;
+    --text-30: 30px;
+
+    /* Font weights */
+    --font-regular: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+  }
+
+  html {
+    font-family: var(--font-sans);
+  }
+
+  body {
+    color: var(--color-ink);
+    background-color: var(--color-white);
+  }
+}
