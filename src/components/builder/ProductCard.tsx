@@ -37,7 +37,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div
       className={cn(
-        "relative flex flex-col gap-3 rounded-xl border-2 bg-white p-5 md:flex-row md:gap-5 desktop:flex-col",
+        "relative flex min-w-0 flex-col gap-3 overflow-hidden rounded-xl border-2 bg-white p-5",
         selected ? "border-purple" : "border-borderGrey",
       )}
     >
@@ -48,53 +48,51 @@ const ProductCard = ({ product }: { product: Product }) => {
       <img
         src={product.image}
         alt={product.name}
-        className="mx-auto h-40 w-full object-contain md:h-32 md:w-32 md:shrink-0 md:self-center desktop:mx-auto desktop:h-40 desktop:w-full desktop:self-auto"
+        className="mx-auto h-40 w-full object-contain"
       />
 
-      <div className="flex flex-1 flex-col gap-3">
-        <h3 className="text-20 font-semibold text-ink">{product.name}</h3>
+      <h3 className="text-20 font-semibold text-ink">{product.name}</h3>
 
-        {product.description && (
-          <p className="text-14 text-slate">
-            {product.description}{" "}
-            {product.learnMoreUrl && (
-              <a
-                href={product.learnMoreUrl}
-                className="font-medium text-purple underline"
-              >
-                Learn More
-              </a>
-            )}
-          </p>
-        )}
+      {product.description && (
+        <p className="text-14 text-slate">
+          {product.description}{" "}
+          {product.learnMoreUrl && (
+            <a
+              href={product.learnMoreUrl}
+              className="font-medium text-purple underline"
+            >
+              Learn More
+            </a>
+          )}
+        </p>
+      )}
 
-        {hasVariants && (
-          <VariantSelector
-            variants={variants}
-            activeId={activeVariantId!}
-            onSelect={(vId) => setActiveVariant(product.id, vId)}
-            productImage={product.image}
-          />
-        )}
+      {hasVariants && (
+        <VariantSelector
+          variants={variants}
+          activeId={activeVariantId!}
+          onSelect={(vId) => setActiveVariant(product.id, vId)}
+          productImage={product.image}
+        />
+      )}
 
-        <div className="mt-auto flex items-center justify-between">
-          <Stepper
-            value={qty}
-            onIncrement={() => increment(product.id, activeVariantId)}
-            onDecrement={() => decrement(product.id, activeVariantId)}
-          />
-          <div className="flex items-baseline gap-2">
-            {compareAtTotal != null && (
-              <span className="text-16 text-saleRed line-through">
-                {formatPrice(compareAtTotal)}
-              </span>
-            )}
-            <span className="text-16 font-semibold text-ink">
-              {pricing.free
-                ? "FREE"
-                : `${formatPrice(priceTotal)}${pricing.suffix ?? ""}`}
+      <div className="mt-auto flex items-center justify-between gap-2">
+        <Stepper
+          value={qty}
+          onIncrement={() => increment(product.id, activeVariantId)}
+          onDecrement={() => decrement(product.id, activeVariantId)}
+        />
+        <div className="flex items-baseline gap-2">
+          {compareAtTotal != null && (
+            <span className="text-16 text-saleRed line-through">
+              {formatPrice(compareAtTotal)}
             </span>
-          </div>
+          )}
+          <span className="text-16 font-semibold text-ink">
+            {pricing.free
+              ? "FREE"
+              : `${formatPrice(priceTotal)}${pricing.suffix ?? ""}`}
+          </span>
         </div>
       </div>
     </div>

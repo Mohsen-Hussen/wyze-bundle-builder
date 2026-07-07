@@ -11,7 +11,7 @@ const CameraStep = () => {
 
   return (
     <div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 desktop:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 desktop:grid-cols-5">
         {cameras.map((p) => (
           <ProductCard key={p.id} product={p} />
         ))}
