@@ -3,6 +3,7 @@ import { cn } from "../../utils/cn";
 interface ColorChipProps {
 	label: string;
 	swatch?: string;
+	image?: string;
 	active?: boolean;
 	onClick?: () => void;
 	className?: string;
@@ -11,6 +12,7 @@ interface ColorChipProps {
 const ColorChip = ({
 	label,
 	swatch,
+	image,
 	active = false,
 	onClick,
 	className,
@@ -21,16 +23,25 @@ const ColorChip = ({
 			onClick={onClick}
 			aria-pressed={active}
 			className={cn(
-				"inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-12 font-medium transition-colors",
+				"inline-flex items-center gap-2 rounded-md border px-2 py-1 text-12 font-medium transition-colors",
 				active ? "border-purple text-ink" : "border-borderGrey text-slate",
 				className,
 			)}
 		>
-			<span
-				className="h-3.5 w-3.5 rounded-full border border-borderGrey"
-				style={{ backgroundColor: swatch }}
-			/>
-			{label}
+			{image ? (
+				<img
+					src={image}
+					alt=""
+					aria-hidden="true"
+					className="h-6 w-6 rounded-md object-contain"
+				/>
+			) : (
+				<span
+					className="h-3.5 w-3.5 rounded-full border border-borderGrey"
+					style={{ backgroundColor: swatch }}
+				/>
+			)}
+			<span>{label}</span>
 		</button>
 	);
 };

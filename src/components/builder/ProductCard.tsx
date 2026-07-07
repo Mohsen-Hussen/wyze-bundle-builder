@@ -27,6 +27,13 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 	const { pricing } = product;
 
+	const showSubtotal = qty > 0;
+	const priceTotal = pricing.price * (showSubtotal ? qty : 1);
+	const compareAtTotal =
+		pricing.compareAt != null
+			? pricing.compareAt * (showSubtotal ? qty : 1)
+			: undefined;
+
 	return (
 		<div
 			className={cn(
@@ -65,6 +72,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 					variants={variants}
 					activeId={activeVariantId!}
 					onSelect={(vId) => setActiveVariant(product.id, vId)}
+					productImage={product.image}
 				/>
 			)}
 
@@ -75,15 +83,15 @@ const ProductCard = ({ product }: { product: Product }) => {
 					onDecrement={() => decrement(product.id, activeVariantId)}
 				/>
 				<div className="flex items-baseline gap-2">
-					{pricing.compareAt != null && (
+					{compareAtTotal != null && (
 						<span className="text-16 text-saleRed line-through">
-							{formatPrice(pricing.compareAt)}
+							{formatPrice(compareAtTotal)}
 						</span>
 					)}
 					<span className="text-16 font-semibold text-ink">
 						{pricing.free
 							? "FREE"
-							: `${formatPrice(pricing.price)}${pricing.suffix ?? ""}`}
+							: `${formatPrice(priceTotal)}${pricing.suffix ?? ""}`}
 					</span>
 				</div>
 			</div>

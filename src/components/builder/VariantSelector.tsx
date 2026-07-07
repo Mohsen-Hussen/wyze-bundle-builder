@@ -5,12 +5,14 @@ interface VariantSelectorProps {
 	variants: Variant[];
 	activeId: string;
 	onSelect: (variantId: string) => void;
+	productImage?: string;
 }
 
 const VariantSelector = ({
 	variants,
 	activeId,
 	onSelect,
+	productImage,
 }: VariantSelectorProps) => {
 	return (
 		<div className="flex flex-wrap gap-2">
@@ -19,6 +21,7 @@ const VariantSelector = ({
 					key={v.id}
 					label={v.label}
 					swatch={v.swatch}
+					image={v.image ?? productImage}
 					active={v.id === activeId}
 					onClick={() => onSelect(v.id)}
 				/>
