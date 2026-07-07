@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { useCartTotals } from "../../hooks/useCartTotals";
+import { useCartStore } from "../../store/cartStore";
 import { formatPrice } from "../../utils/format";
 import Button from "../ui/Button";
 
 const CheckoutBlock = () => {
 	const { total, preDiscountTotal, savings, financing } = useCartTotals();
+	const saveForLater = useCartStore((s) => s.saveForLater);
 	const [confirmed, setConfirmed] = useState<boolean>(false);
+	const [saved, setSaved] = useState<boolean>(false);
 
 	const handleCheckout = () => {
 		setConfirmed(true);
 		window.setTimeout(() => setConfirmed(false), 4000);
+	};
+
+	const handleSaveForLater = () => {
+		saveForLater();
+		setSaved(true);
+		window.setTimeout(() => setSaved(false), 3000);
 	};
 
 	return (
@@ -63,9 +72,12 @@ const CheckoutBlock = () => {
 
 			<button
 				type="button"
+				onClick={handleSaveForLater}
 				className="mx-auto text-14 italic text-ink underline"
 			>
-				Save my system for later
+				{saved
+					? "Saved - we'll keep it for your return"
+					: "Save my system for later"}
 			</button>
 		</div>
 	);
