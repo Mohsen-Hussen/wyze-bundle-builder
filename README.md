@@ -35,10 +35,13 @@ optional placeholders (the app runs without them, see **Assets** below):
 
 - **4-step accordion builder** (cameras / plan / sensors / extra protection).
   One panel open at a time; Step 1 open on load; each header shows a
-  "STEP X OF 4" eyebrow, an icon, the title, and an "N selected" counter.
+  "STEP X OF 4" eyebrow, an icon, the title, and an "N selected" counter. Every
+  step renders its category's products as pickable cards and ends with a
+  "Next: …" button that advances to the following step.
 - **Product cards** with discount badge, image, description + Learn More, a
   colour/variant selector, a quantity stepper, and pricing. A card with any
-  quantity shows the selected (purple-border) state.
+  quantity shows the selected (purple-border) state; required items (the Sense
+  Hub) show a disabled stepper.
 - **Per-variant quantities** — each colour of a product tracks its own quantity
   independently; the card's single stepper is bound to the active colour (see
   the model below).
@@ -72,31 +75,50 @@ optional placeholders (the app runs without them, see **Assets** below):
 ## Project structure
 
 ```
-src/
-├── main.tsx                 # QueryClientProvider + root render
-├── App.tsx                  # responsive layout shell
-├── theme/tokens.ts          # single source of design tokens
-├── styles/globals.css       # @font-face, CSS vars, Tailwind directives
-├── types/index.ts           # Product, Variant, Category, CartEntry, Step, Pricing
-├── data/
-│   ├── products.json        # catalog: products, variants, categories, steps, shipping
-│   └── initialSystem.ts     # seeded cart so first load matches the design
-├── api/products.ts          # fetchProducts() -> Catalog (swap for a backend later)
-├── store/cartStore.ts       # Zustand cart: per-variant quantities + saveForLater
-├── hooks/
-│   ├── useProducts.ts       # TanStack Query hook
-│   ├── useCartTotals.ts     # derived total / pre-discount / savings / per-step counts
-│   ├── useReviewItems.ts    # groups the cart by category for the review panel
-│   ├── useProductCard.ts    # card state (active variant, qty, selected, pricing)
-│   ├── useReviewLine.ts     # per-line review derivations
-│   └── useCheckoutItems.ts  # flat item list for the confirmation modal
-├── components/
-│   ├── ui/                  # Button, Badge, Stepper, ColorChip, Chevron
-│   ├── builder/             # BuilderAccordion, StepHeader, CameraStep, ProductCard, VariantSelector
-│   └── review/              # SummaryPanel, ReviewPanel, ReviewLine, CheckoutBlock, CheckoutConfirmation
-└── utils/
-    ├── cn.ts                # clsx + tailwind-merge
-    └── format.ts            # currency formatting
+wyze-bundle-builder/
+├── public/
+│   ├── fonts/                    # Gilroy .woff2 files go here (licensed; README placeholder)
+│   ├── images/
+│   │   ├── icons/                # step-cameras / step-plan / step-sensors / step-protection .svg
+│   │   └── products/             # product PNGs + cam-unlimited.svg, guarantee-seal.svg, carbon_delivery.svg
+│   └── favicon.svg
+├── src/
+│   ├── main.tsx                  # QueryClientProvider + root render
+│   ├── App.tsx                   # responsive layout shell
+│   ├── api/
+│   │   └── products.ts           # fetchProducts() -> Catalog (swap for a backend later)
+│   ├── components/
+│   │   ├── builder/              # BuilderAccordion, StepHeader, ProductStep, ProductCard, VariantSelector
+│   │   ├── review/               # SummaryPanel, ReviewPanel, ReviewLine, CheckoutBlock, CheckoutConfirmation
+│   │   └── ui/                   # Badge, Button, Chevron, ColorChip, Stepper, index.ts
+│   ├── data/
+│   │   ├── products.json         # catalog: products, variants, categories, steps, shipping
+│   │   └── initialSystem.ts      # seeded cart so first load matches the design
+│   ├── hooks/
+│   │   ├── useProducts.ts        # TanStack Query hook
+│   │   ├── useCartTotals.ts      # derived total / pre-discount / savings / per-step counts
+│   │   ├── useReviewItems.ts     # groups the cart by category for the review panel
+│   │   ├── useReviewLine.ts      # per-line review derivations
+│   │   ├── useProductCard.ts     # card state (active variant, qty, selected, pricing)
+│   │   └── useCheckoutItems.ts   # flat item list for the confirmation modal
+│   ├── store/
+│   │   └── cartStore.ts          # Zustand cart: per-variant quantities + saveForLater
+│   ├── theme/
+│   │   └── tokens.ts             # single source of design tokens
+│   ├── styles/
+│   │   └── globals.css           # @font-face, CSS vars, Tailwind directives
+│   ├── types/
+│   │   └── index.ts              # Product, Variant, Category, CartEntry, Step, Pricing
+│   └── utils/
+│       ├── cn.ts                 # clsx + tailwind-merge
+│       └── format.ts             # currency formatting
+├── index.html
+├── tailwind.config.ts            # tokens wired into theme.extend + `desktop` breakpoint
+├── postcss.config.js
+├── vite.config.ts                # React plugin + React Compiler
+├── eslint.config.js
+├── tsconfig.json                 # + tsconfig.app.json / tsconfig.node.json
+└── package.json
 ```
 
 ---
@@ -106,9 +128,9 @@ src/
 Cart state lives in `src/store/cartStore.ts` and is keyed so every colour is its
 own line:
 
-- **`entries: Record<key, CartEntry>`** where `key = variantId ?? productId`.
+- **`entries: Record<key, CartEntry>`** where `key = ${productId}::${variantId}`.
   Each colour of a product is an independent entry with its own quantity;
-  products without variants are a single entry keyed by `productId`.
+  products without variants are a single entry keyed by product id.
 - **`activeVariants: Record<productId, variantId>`** — which colour is currently
   selected per product. A card's single stepper is bound to the active variant.
 
@@ -124,9 +146,9 @@ per-step "N selected" counts are derived from this state in `useCartTotals`
 
 Everything renders from `src/data/products.json` — no per-product markup is
 hardcoded. `src/data/initialSystem.ts` seeds the cart so the first load matches
-the design (including the pre-populated sensors/accessory/plan that have no
-add-control in this view). The seed reconciles exactly to the design's headline
-numbers: **total $187.89, pre-discount $238.81, savings $50.92**.
+the design (including the pre-populated sensors/accessory/plan). The seed
+reconciles exactly to the design's headline numbers: **total $187.89,
+pre-discount $238.81, savings $50.92**.
 
 ---
 
@@ -141,8 +163,8 @@ numbers: **total $187.89, pre-discount $238.81, savings $50.92**.
 - **Manual persistence instead of Zustand's `persist` middleware.** The
   requirement is to save **only** when "Save my system for later" is clicked;
   `persist` auto-writes on every state change, so a small explicit
-  read-on-init / write-on-save (`saveForLater`) is used instead. Structure of
-  the stored data is our choice (a `{ entries, activeVariants }` snapshot).
+  read-on-init / write-on-save (`saveForLater`) is used instead. The saved
+  snapshot carries a `version` and is discarded on mismatch.
 - **Vertical cards at every breakpoint.** The spec suggested horizontal cards on
   tablet, but inside the narrow builder column (beside the sticky summary
   sidebar) they overflow. A responsive vertical-card grid (1 / 2 / 5 columns)
@@ -154,8 +176,5 @@ numbers: **total $187.89, pre-discount $238.81, savings $50.92**.
 
 ## Known limitations / not finished
 
-- **Steps 2–4 are non-interactive stubs.** Only the cameras step renders a
-  pickable grid; the plan/sensors/accessory selections are seeded and editable
-  from the review panel, but those steps don't yet have their own pickable UI.
 - **Assets are placeholders.** Gilroy `.woff2` files (licensed) and some product
   imagery need to be supplied; the app runs with fallbacks in the meantime.
