@@ -1,5 +1,5 @@
 import BuilderAccordion from "./components/builder/BuilderAccordion";
-import CameraStep from "./components/builder/CameraStep";
+import ProductStep from "./components/builder/ProductStep";
 import SummaryPanel from "./components/review/SummaryPanel";
 
 function App() {
@@ -12,9 +12,9 @@ function App() {
         <div className="md:flex md:items-start md:gap-8 desktop:block">
           <div className="md:min-w-0 md:flex-1">
             <BuilderAccordion
-              renderStep={(stepId, goToNext) =>
-                stepId === "cameras" ? <CameraStep onNext={goToNext} /> : undefined
-              }
+              renderStep={(stepId, goToNext) => (
+                <ProductStep stepId={stepId} onNext={goToNext} />
+              )}
             />
           </div>
           <div className="mt-8 md:mt-0 md:w-[380px] md:shrink-0 md:sticky md:top-6 desktop:mt-8 desktop:w-full desktop:static">
