@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import { useProducts } from "../../hooks/useProducts";
-import { useCartStore } from "../../store/cartStore";
 import { useCartTotals } from "../../hooks/useCartTotals";
-import { formatPrice } from "../../utils/format";
+import { useCheckoutItems } from "../../hooks/useCheckoutItems";
 import Button from "../ui/Button";
+import { formatPrice } from "../../utils/format";
 
 interface CheckoutConfirmationProps {
 	open: boolean;
@@ -11,8 +10,7 @@ interface CheckoutConfirmationProps {
 }
 
 const CheckoutConfirmation = ({ open, onClose }: CheckoutConfirmationProps) => {
-	const { data } = useProducts();
-	const entries = useCartStore((s) => s.entries);
+	const items = useCheckoutItems();
 	const { total, savings } = useCartTotals();
 
 	useEffect(() => {
@@ -25,26 +23,6 @@ const CheckoutConfirmation = ({ open, onClose }: CheckoutConfirmationProps) => {
 	}, [open, onClose]);
 
 	if (!open) return null;
-
-	const productsById = new Map((data?.products ?? []).map((p) => [p.id, p]));
-	const items = Object.values(entries).flatMap((e) => {
-		const p = productsById.get(e.productId);
-		if (!p) return [];
-		const variantLabel = e.variantId
-			? p.variants?.find((v) => v.id === e.variantId)?.label
-			: undefined;
-		return [
-			{
-				key: e.variantId ?? e.productId,
-				name: p.name,
-				variantLabel,
-				qty: e.quantity,
-				free: p.pricing.free ?? false,
-				line: p.pricing.price * e.quantity,
-				suffix: p.pricing.suffix ?? "",
-			},
-		];
-	});
 
 	return (
 		<div
