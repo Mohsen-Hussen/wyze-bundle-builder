@@ -37,16 +37,16 @@ const CheckoutBlock = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="rounded-lg bg-purple px-3 py-2 text-14 font-medium text-white">
+        <span className="rounded-lg bg-purple px-3 py-2 text-16 font-medium text-white">
           as low as {formatPrice(financing)}/mo
         </span>
         <span className="flex items-baseline gap-2">
           {preDiscountTotal > total && (
-            <span className="text-18 text-muted line-through">
+            <span className="text-22 text-muted line-through">
               {formatPrice(preDiscountTotal)}
             </span>
           )}
-          <span className="text-30 font-bold text-purple">
+          <span className="text-28 font-bold text-purple">
             {formatPrice(total)}
           </span>
         </span>

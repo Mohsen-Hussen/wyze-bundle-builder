@@ -1,8 +1,9 @@
 import ReviewLine from "./ReviewLine";
+import { formatPrice } from "../../utils/format";
 import { useReviewItems } from "../../hooks/useReviewItems";
 
 const ReviewPanel = () => {
-	const { categories, grouped, productsById } = useReviewItems();
+	const { categories, grouped, productsById, shipping } = useReviewItems();
 
 	return (
 		<div>
@@ -19,6 +20,7 @@ const ReviewPanel = () => {
 				{categories.map((c) => {
 					const items = grouped[c.id] ?? [];
 					if (items.length === 0) return null;
+					const isPlan = c.id === "plan";
 					return (
 						<section key={c.id}>
 							<div className="mb-3 text-12 uppercase text-muted">
@@ -41,6 +43,8 @@ const ReviewPanel = () => {
 											product={product}
 											variantId={it.variantId}
 											qty={it.qty}
+											showStepper={!isPlan}
+											twoTone={isPlan}
 										/>
 									);
 								})}
@@ -48,6 +52,33 @@ const ReviewPanel = () => {
 						</section>
 					);
 				})}
+
+				{shipping && (
+					<div className="flex items-center justify-between gap-3 border-t border-dividerLight pt-6">
+						<div className="flex items-center gap-3">
+							<span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white">
+								<img
+									src="/images/products/carbon_delivery.svg"
+									alt="Fast Shipping"
+									className="h-5 w-5"
+								/>
+							</span>
+							<span className="text-18 font-medium text-ink">
+								{shipping.label}
+							</span>
+						</div>
+						<div className="flex items-baseline gap-2">
+							{shipping.compareAt != null && (
+								<span className="text-14 text-muted line-through">
+									{formatPrice(shipping.compareAt)}
+								</span>
+							)}
+							<span className="text-14 font-semibold text-purple">
+								{shipping.free ? "FREE" : formatPrice(shipping.price)}
+							</span>
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);
