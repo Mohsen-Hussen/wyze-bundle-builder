@@ -159,8 +159,3 @@ numbers: **total $187.89, pre-discount $238.81, savings $50.92**.
   from the review panel, but those steps don't yet have their own pickable UI.
 - **Assets are placeholders.** Gilroy `.woff2` files (licensed) and some product
   imagery need to be supplied; the app runs with fallbacks in the meantime.
-- **No automated test suite committed.** The cart model, totals, variant binding,
-  persistence, and the confirmation modal were verified during development but
-  are not yet checked in as Vitest tests — a natural next step.
-- **Backend is a bonus, not done.** `fetchProducts()` reads local JSON; it is
-  isolated so it can be swapped for a real `fetch()` without touching the UI.

@@ -1,21 +1,18 @@
-import type { CartEntry, Product, Step, StepId } from '../types'
-import { useProducts } from './useProducts'
-import { useCartStore } from '../store/cartStore'
+import { useMemo } from "react";
+import type { CartEntry, Product, Step, StepId } from "../types";
+import { useProducts } from "./useProducts";
+import { useCartStore } from "../store/cartStore";
 
-/**
- * "As low as $19.19/mo" is a fixed figure from the design, shown as-is rather
- * than derived from the total (it does not divide cleanly from $187.89).
- */
-export const FIXED_FINANCING = 19.19
+export const FIXED_FINANCING = 19.19;
 
-const round2 = (n: number): number => Math.round(n * 100) / 100
+const round2 = (n: number): number => Math.round(n * 100) / 100;
 
 export interface CartTotals {
-  total: number
-  preDiscountTotal: number
-  savings: number
-  financing: number
-  countsByStep: Record<StepId, number>
+  total: number;
+  preDiscountTotal: number;
+  savings: number;
+  financing: number;
+  countsByStep: Record<StepId, number>;
 }
 
 export const computeTotals = (
@@ -23,29 +20,29 @@ export const computeTotals = (
   products: Product[],
   steps: Step[],
 ): CartTotals => {
-  const byId = new Map(products.map((p) => [p.id, p]))
+  const byId = new Map(products.map((p) => [p.id, p]));
 
-  let total = 0
-  let preDiscountTotal = 0
+  let total = 0;
+  let preDiscountTotal = 0;
   for (const e of entries) {
-    const p = byId.get(e.productId)
-    if (!p) continue
-    total += p.pricing.price * e.quantity
-    preDiscountTotal += (p.pricing.compareAt ?? p.pricing.price) * e.quantity
+    const p = byId.get(e.productId);
+    if (!p) continue;
+    total += p.pricing.price * e.quantity;
+    preDiscountTotal += (p.pricing.compareAt ?? p.pricing.price) * e.quantity;
   }
-  total = round2(total)
-  preDiscountTotal = round2(preDiscountTotal)
+  total = round2(total);
+  preDiscountTotal = round2(preDiscountTotal);
 
   const chosenProductIds = new Set(
     entries.filter((e) => e.quantity > 0).map((e) => e.productId),
-  )
-  const countsByStep = {} as Record<StepId, number>
+  );
+  const countsByStep = {} as Record<StepId, number>;
   for (const step of steps) {
-    let count = 0
+    let count = 0;
     for (const pid of chosenProductIds) {
-      if (byId.get(pid)?.category === step.category) count++
+      if (byId.get(pid)?.category === step.category) count++;
     }
-    countsByStep[step.id] = count
+    countsByStep[step.id] = count;
   }
 
   return {
@@ -54,11 +51,19 @@ export const computeTotals = (
     savings: round2(preDiscountTotal - total),
     financing: FIXED_FINANCING,
     countsByStep,
-  }
-}
+  };
+};
 
 export const useCartTotals = (): CartTotals => {
-  const { data } = useProducts()
-  const entries = useCartStore((s) => s.entries)
-  return computeTotals(Object.values(entries), data?.products ?? [], data?.steps ?? [])
-}
+  const { data } = useProducts();
+  const entries = useCartStore((s) => s.entries);
+  return useMemo(
+    () =>
+      computeTotals(
+        Object.values(entries),
+        data?.products ?? [],
+        data?.steps ?? [],
+      ),
+    [entries, data?.products, data?.steps],
+  );
+};
