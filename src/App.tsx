@@ -12,8 +12,8 @@ function App() {
         <div className="md:flex md:items-start md:gap-8 desktop:block">
           <div className="md:min-w-0 md:flex-1">
             <BuilderAccordion
-              renderStep={(stepId) =>
-                stepId === "cameras" ? <CameraStep /> : undefined
+              renderStep={(stepId, goToNext) =>
+                stepId === "cameras" ? <CameraStep onNext={goToNext} /> : undefined
               }
             />
           </div>

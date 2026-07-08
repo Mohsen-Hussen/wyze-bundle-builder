@@ -2,7 +2,11 @@ import ProductCard from "./ProductCard";
 import { useProducts } from "../../hooks/useProducts";
 import Button from "../ui/Button";
 
-const CameraStep = () => {
+interface CameraStepProps {
+  onNext?: () => void;
+}
+
+const CameraStep = ({ onNext }: CameraStepProps) => {
   const { data } = useProducts();
   const products = data?.products ?? [];
   const cameras = products.filter((p) => p.category === "cameras");
@@ -17,7 +21,9 @@ const CameraStep = () => {
         ))}
       </div>
       <div className="mt-6 flex w-full justify-center">
-        <Button variant="outline">{nextLabel}</Button>
+        <Button variant="outline" onClick={onNext}>
+          {nextLabel}
+        </Button>
       </div>
     </div>
   );
